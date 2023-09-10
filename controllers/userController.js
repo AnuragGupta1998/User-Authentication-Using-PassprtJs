@@ -79,6 +79,19 @@ module.exports.createUserSession=function(req,res){
 //profile page for user
 module.exports.userProfile=function(req,res){
 
+    //finding user by its is
+    console.log('user profile page');
+    if(req.cookies){
+        User.findById(req.cookies).then((userId)=>{
+
+        }).catch(e=>{
+            console.log('user has been logout from profile');
+            console.log('Please login');
+            return res.redirect('/userSignIn')     
+        });
+    }
+    console.log(req.cookies);
+
     return res.render('userProfile',{title:'profile of user'})
 
 }
