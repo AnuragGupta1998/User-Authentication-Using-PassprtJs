@@ -15,7 +15,9 @@ router.get('/userSignIn',userController.userSignIn)
 
 router.post('/createUser',userController.createUser)
 
-router.post('/createUserSession',userController.userProfile)
+router.post('/createUserSession',userController.createUserSession)
+
+router.get('/userProfile',userController.userProfile)
 
 
 
