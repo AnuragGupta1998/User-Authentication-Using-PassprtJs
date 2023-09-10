@@ -19,6 +19,8 @@ router.post('/createUserSession',userController.createUserSession)
 
 router.get('/userProfile',userController.userProfile)
 
+router.get('/userLogout',userController.userLogout)
+
 
 
 

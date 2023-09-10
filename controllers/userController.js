@@ -1,4 +1,4 @@
-const User=require('../models/user');
+const User=require('../models/user'); //Schema of Database
 
 //user SignUp.............................................................................
 module.exports.userSignUp=function(req,res){
@@ -42,28 +42,19 @@ module.exports.createUser=function(req,res){
     }).catch(err=>console.log(err));
 }
     
-    
 //createUserSession.................................................................................................
 module.exports.createUserSession=function(req,res){
     //TODO creating session for user
 
     //checking email is valid or not in DB
-    // if(User.email!=req.body.email){
-
-    //     console.log('email is not valid please SignUp');
-    //     return res.redirect('/userSignUp');
-    // }
-    
-    //other checks as well of incoming request from user
     User.findOne({email:req.body.email}).then((user)=>{
          console.log("User Email found in database ",user.email);
 
          if(user.password!=req.body.password){
-            console.log('password did not mathch plese re-enter your password');
+            console.log('password did not match plese re-enter your password');
             return res.redirect('/userSignIn');
          }
-
-         console.log('user is validate his password',user.password);
+        //  console.log('user is validate his password',user.password);
 
          res.cookie('user_id',user.id);// storing cookies inside browser with user_id name(header)
          return res.redirect('/userProfile');
@@ -72,17 +63,19 @@ module.exports.createUserSession=function(req,res){
         console.log("Email not found please SignUp");
         return res.redirect('/userSignUp');
     });
-
-
 }
 
-//profile page for user
+//profile page for user...............................................................................................
 module.exports.userProfile=function(req,res){
 
     //finding user by its is
     console.log('user profile page');
-    if(req.cookies){
-        User.findById(req.cookies).then((userId)=>{
+    if(req.cookies.user_id){
+        User.findById(req.cookies.user_id).then((user)=>{
+
+            console.log('user has login into theit account userProfile');
+       
+            return res.render('userProfile',{title:'userProfile',userId:user})
 
         }).catch(e=>{
             console.log('user has been logout from profile');
@@ -90,13 +83,16 @@ module.exports.userProfile=function(req,res){
             return res.redirect('/userSignIn')     
         });
     }
-    console.log(req.cookies);
-
-    return res.render('userProfile',{title:'profile of user'})
-
+    else{
+        console.log('already logout plese signIn');
+       return res.redirect('/userSignIn');
+    }
 }
+//logout from profile.................................................................................................
+module.exports.userLogout=function(req,res){
 
-//logout from profile
-module.exports.logoutUser=function(req,res){
+    console.log('user Logout',);
 
+    res.clearCookie('user_id');
+    return res.redirect('back');
 }
