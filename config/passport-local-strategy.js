@@ -4,19 +4,22 @@ const LocalStrategy=require('passport-local').Strategy;
 const User=require('../models/user');
 
 //using passport for authentication in userSignIn Controller SignIn
+//telling passport using LocalStrategy to authentication 
 passport.use(new LocalStrategy({
 
-      usernameField:'email'  // keyword that we can define or we can't use, setting usernameField as email
+      usernameField:'email'  // defining username by email
     },
-   function(email,password,done){
-
+   function(email,password,done){    //here done is inbuilt callback function
+ 
+      //find the user and establize the identity
       User.findOne({email:email}).then((user)=>{
 
+        //if user is not found
         if(!user || user.password!=password){
           console.log('invalid username/password');
           return done(null,false); //there is no error(null) but authentication not done (false)
         }
-
+        //if user is found
         return done(null,user)
       }).catch(e=>{
         return done(e);
