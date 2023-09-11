@@ -92,17 +92,17 @@ module.exports.userLogout=function(req,res){
 
     // console.log('user Logout',);
 
-    // res.clearCookie('user_id');
-    // return res.redirect('back');
+    res.clearCookie('user_id');
+    return res.redirect('back');
 
     //or we can also do this
-    User.findById(req.cookies.user_id).then((user)=>{
-        console.log("user",user.name,"logout and his id is",user.id);
-        res.clearCookie('user_id'); //clearing cookies frrom browser
-        return res.redirect('/userSignIn');
-    }).catch(e=>{
-        console.log('user already logout please SignIn again',);
-        return res.redirect('/userSignIn');
+    // User.findById(req.cookies.user_id).then((user)=>{
+    //     console.log("user",user.name,"logout and his id is",user.id);
+    //     res.clearCookie('user_id'); //clearing cookies frrom browser
+    //     return res.redirect('/userSignIn');
+    // }).catch(e=>{
+    //     console.log('user already logout please SignIn again',);
+    //     return res.redirect('/userSignIn');
         
-    });
+    // });
 }
