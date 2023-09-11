@@ -3,7 +3,7 @@ const LocalStrategy=require('passport-local').Strategy;
 
 const User=require('../models/user');
 
-//using passport for authentication in userSignIn Controller
+//using passport for authentication in userSignIn Controller SignIn
 passport.use(new LocalStrategy({
 
       usernameField:'email'  // keyword that we can define or we can't use, setting usernameField as email
