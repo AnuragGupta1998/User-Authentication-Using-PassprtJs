@@ -16,7 +16,7 @@ module.exports.userSignIn=function(req,res){
 module.exports.createUser=function(req,res){
     //TODO create user
     //checking password with confirm_password
-    console.log('cookie inside ceate User',req.cookies);
+    // console.log('cookie inside ceate User',req.cookies); accessing cookies
     
     if(req.body.password != req.body.confirm_password){
         console.log("password did not matching confirm_password");
@@ -35,7 +35,6 @@ module.exports.createUser=function(req,res){
         }
 
         else{
-            console.log('cookie inside findOne email',);
             console.log('user already in DB');
             return res.redirect('/userSignIn');
         }
@@ -48,7 +47,7 @@ module.exports.createUserSession=function(req,res){
 
     //checking email is valid or not in DB
     User.findOne({email:req.body.email}).then((user)=>{
-         console.log("User Email found in database ",user.email);
+         console.log("createUserSession:- User Email found in database ",user.email);
 
          if(user.password!=req.body.password){
             console.log('password did not match plese re-enter your password');
@@ -91,8 +90,19 @@ module.exports.userProfile=function(req,res){
 //logout from profile.................................................................................................
 module.exports.userLogout=function(req,res){
 
-    console.log('user Logout',);
+    // console.log('user Logout',);
 
-    res.clearCookie('user_id');
-    return res.redirect('back');
+    // res.clearCookie('user_id');
+    // return res.redirect('back');
+
+    //or we can also do this
+    User.findById(req.cookies.user_id).then((user)=>{
+        console.log("user",user.name,"logout and his id is",user.id);
+        res.clearCookie('user_id'); //clearing cookies frrom browser
+        return res.redirect('/userSignIn');
+    }).catch(e=>{
+        console.log('user already logout please SignIn again',);
+        return res.redirect('/userSignIn');
+        
+    });
 }
