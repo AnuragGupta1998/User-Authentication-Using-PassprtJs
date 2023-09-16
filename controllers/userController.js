@@ -1,7 +1,7 @@
 const User=require('../models/user')
 
 module.exports.userSignUp=function(req,res){
-    console.log('cookie inside singup',req.cookies);
+    // console.log('cookie inside singup',req.cookies);
     return res.render('userSignUp',{title:"userSignUp"});
     // return res.end('<h1> SignUp Page </h1>')
 }
@@ -11,7 +11,7 @@ module.exports.userSignIn=function(req,res){
     return res.render('userSignIn',{title:"userSignIn"});
 }
 
-//createUser................................................................................
+//createUser. SignUp...............................................................................
 module.exports.createUser=function(req,res){
     //TODO create user
     //checking password with confirm_password
@@ -27,33 +27,31 @@ module.exports.createUser=function(req,res){
         if(!user){
 
             console.log("User Not Found in Db");
-
+            //creating user.......
             User.create(req.body);
             console.log("user created");
             return res.redirect('/userSignIn');
         }
 
         else{
-            console.log('cookie inside findOne email',);
             console.log('user already in DB');
             return res.redirect('/userSignIn');
         }
     }).catch(err=>console.log(err));
 }
-    
-    
 
-
-//createUserSession
+//createUserSession..................................................................................
 module.exports.createUserSession=function(req,res){
     //TODO creating seeion for user
-    return res.render('userProfile',{title:'Passport Authentication'})
+    // return res.render('userProfile',{title:'Passport Authentication'})
+    return res.redirect('/userProfile');
 }
 
 //profile page for user
 module.exports.userProfile=function(req,res){
 
-    return res.render('userProfile',{title:'profile of user'})
+    console.log('user prfile page');
+    return res.render('userProfile',{title:'profile of user'});
 
 }
 

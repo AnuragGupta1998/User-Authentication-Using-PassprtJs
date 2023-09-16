@@ -11,21 +11,21 @@ const router=require('./routers/index');  //require all router
 const db=require('./config/mongoose');//mogodb connected
 
 //used for session cookie..........................................................................................
-// const session=require('express-session');
-// const passport=require('passport');
-// const passportLocal=require('./config/passport-local-strategy')
+const session=require('express-session');
+const passport=require('passport');
+const passportLocal=require('./config/passport-local-strategy');
 
 
 
 //middleware...........................................................................................................
 
-app.use(express.static('assets'));//static middleware to assets
+app.use(express.static('assets'));//static middleware to assets css and js
 
-app.use(express.urlencoded());//to read from from data\
+app.use(express.urlencoded());//to read from form data
 
 app.use(cookieParser());//read write of cookie
 
-//layout middleware
+//layout middleware 
 app.use(expressLayout)
 app.set('layout extractStyles' ,true);  //extract style and script from sub pages of the layout.ejs inside views....
 app.set('layout extractScripts' ,true); //extract style and script from sub pages of the layout.ejs inside views....
@@ -35,18 +35,18 @@ app.set('view engine','ejs');
 app.set('views','./views')
 
 //used for session cookie
-// app.use(session({
-//     name:'anurag_cookie',
-//     secret:"Anurag",
-//     saveUninitialized:false,
-//     resave:false,
+app.use(session({
+    name:'anurag_cookie', //name of cookie
+    secret:"Anurag",     //key for the ecryption/decryption
+    saveUninitialized:false,
+    resave:false,
 
-//     cookie:{
-//         maxAge:(1000*60*100),
-//     }
-// }));
-// app.use(passport.initialize());
-// app.use(passport.session());
+    cookie:{
+        maxAge:(1000*60*100),  //maximug age of cookie
+    }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 //router middleware
