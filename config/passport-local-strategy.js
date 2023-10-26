@@ -9,19 +9,24 @@ passport.use(new LocalStrategy({
 
       usernameField:'email'  // defining username by email
     },
-   function(email,password,done){    //here done is inbuilt callback function
+    function(email,password,done){    //here done is inbuilt callback function
  
       //find the user and establize the identity
       User.findOne({email:email}).then((user)=>{
 
         //if user is not found
         if(!user || user.password!=password){
-          console.log('invalid username/password');
+          console.log('invalid username / password');
+          
           return done(null,false); //there is no error(null) but authentication not done (false)
         }
+        // else if(user.password!=password){
+        //   console.log('invalid password ');
+        //   return done(null,false);
+        // }
         //if user is found
         return done(null,user)//athentication is done and return user
-      }).catch(e=>{
+      }).catch(e=>{   //if there are any error occured in  authentication of user 
         return done(e);
       });
    }
@@ -45,25 +50,33 @@ passport.deserializeUser(function(id,done){
   }
 );
 
-//check if the user is authenticated
+// //check if the user is authenticated
 passport.checkAuthentication=function(req,res,next){
 
   //if user is signed in then pass on next funtion controller's action
-
   if(req.isAuthenticated()){ //this detect wether user is signed in then pass to next function
+    console.log('checkAuthentication'); //optional just for checking the function is called or not
     return next();
   }
   //if user is not signed in
   return res.redirect('/userSignIn');
 }
-
-//set the user for views
+ 
+// //set the user for views
 passport.setAuthenticatedUser=function(req,res,next){
-if(req.isAuthenticated()){
-  //req.user contains the current signed in user from the session cookie and we are just sending to locals for views
-  res.locals.user=req.user;
+  if(req.isAuthenticated()){
+    console.log('setAuthentication');
+   //req.user contains the current signed in user from the session cookie and we are just sending to locals for views
+   res.locals.user=req.user;
+  }
+   next();  
 }
 
-}
+// passport.isAuthenticated=function(req,res,next){
+//   if(req.user){
+//     return next();
+//   }
+//   return res.redirect('/userSignIn');
+// }
 
 module.exports=passport;

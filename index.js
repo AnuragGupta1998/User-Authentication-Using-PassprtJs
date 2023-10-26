@@ -10,14 +10,26 @@ const router=require('./routers/index');  //require all router
 
 const db=require('./config/mongoose');//mogodb connected
 
+const sassMiddleware = require('node-sass-middleware');//scss 
+
 //used for session cookie..........................................................................................
 const session=require('express-session');
 const passport=require('passport');
 const passportLocal=require('./config/passport-local-strategy');
+const MongoStore=require('connect-mongo'); 
 
 
 
 //middleware...........................................................................................................
+
+app.use(sassMiddleware({
+    src: '/assets/scss', //from where scss file
+    dest: '/assets/css',  //where css code writen by scss
+    debug: true, //if there is any error then debug true
+    outputStyle: 'compressed', //scss in multipli line
+    prefix:  '/css' //grom where server look out for css file
+}))
+
 
 app.use(express.static('assets'));//static middleware to assets css and js
 
@@ -37,16 +49,31 @@ app.set('views','./views')
 //used for session cookie
 app.use(session({
     name:'anurag_cookie', //name of cookie
+    //change secret before deployment in production
     secret:"Anurag",     //key for the ecryption/decryption
-    saveUninitialized:false,
-    resave:false,
+    saveUninitialized:false,//not save for invalid user
+    resave:false, //do not save for already present user in DB
 
     cookie:{
         maxAge:(1000*60*100),  //maximug age of cookie
-    }
+    },
+    //storing session cookie into db by mangoose
+    store:new MongoStore
+    (
+        {
+            mongoUrl:'mongodb://localhost/userLoginDB',
+    
+            mongooseConnection:db,
+            autoRemove:'disabled',
+        },
+        function(err){
+            console.log(err||'connection estabilize btm mongoDB and express-session');
+        }
+    ), 
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(passport.setAuthenticatedUser) //user will set in locals  
 
 
 //router middleware
@@ -56,8 +83,10 @@ app.use('/',router)
 
 
 app.get('/home',function(req,res){
-    return res.end('<h1>User Sign Up In Application With Authentication</h1>')
+    return res.send('<h1>User Sign Up In Application With Authentication</h1>')
 });
+
+
 
 app.listen(port,(err)=>{
     if(err){

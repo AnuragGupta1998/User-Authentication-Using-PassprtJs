@@ -9,5 +9,10 @@ const mongoose=require('mongoose');
  db.once('open',function(){
     console.log("connected to the MongoDB Database");
  });
+module.exports=db;
 
- module.exports=db;
+// mongoose.connect('mongodb://localhost/userLoginDB')
+//   .then((connect)=>console.log('connected  mongoDB database')
+//    ).catch(e=>console.log('e',err));
+
+//  module.exports=mongoose;

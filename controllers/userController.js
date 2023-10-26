@@ -1,6 +1,11 @@
 const User=require('../models/user')
 
 module.exports.userSignUp=function(req,res){
+
+    if(req.isAuthenticated()){
+        return res.redirect('/userProfile');
+    }
+
     // console.log('cookie inside singup',req.cookies);
     return res.render('userSignUp',{title:"userSignUp"});
     // return res.end('<h1> SignUp Page </h1>')
@@ -8,6 +13,10 @@ module.exports.userSignUp=function(req,res){
 
 //user SignIn
 module.exports.userSignIn=function(req,res){
+
+    if(req.isAuthenticated()){
+        return res.redirect('/userProfile');
+    }
     return res.render('userSignIn',{title:"userSignIn"});
 }
 
@@ -15,7 +24,7 @@ module.exports.userSignIn=function(req,res){
 module.exports.createUser=function(req,res){
     //TODO create user
     //checking password with confirm_password
-    console.log('cookie inside ceate User',req.cookies);
+    // console.log('cookie inside create User',req.cookies);
     
     if(req.body.password != req.body.confirm_password){
         console.log("password did not matching confirm_password");
@@ -51,11 +60,23 @@ module.exports.createUserSession=function(req,res){
 module.exports.userProfile=function(req,res){
 
     console.log('user prfile page');
-    return res.render('userProfile',{title:'profile of user'});
+    return res.render('userProfile',{title:`profile of user`});
 
 }
 
 //logout from profile
 module.exports.logoutUser=function(req,res){
+
+    // req.logout();
+    req.session.destroy(function (err) {
+           res.clearCookie('anurag_cookie');
+        res.redirect('/userProfile');
+      });
+    // req.logout(function(err) {
+    //     if (err) { return next(err); }
+    //     res.clearCookie('anurag_cookie');
+    //     res.redirect('/userProfile');
+    //   });
+    // return res.send('<h1> Logout successfully done by Anurag</h1>');
 
 }
